@@ -1,0 +1,12 @@
+.bg{
+    background-image: url("../../../../public/images/bg.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    
+}
+
+.main{
+    min-height: 80vh;
+}

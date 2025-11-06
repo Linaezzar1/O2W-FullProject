@@ -1,0 +1,76 @@
+<div class="container text-light mt-5 mb-5">
+  @if(showModal){
+    <app-modal [title]="modalTitle" [message]="modalMessage" (closeModal)="closeModal()"></app-modal>
+    }
+    <div class="row">
+      <div class="col-12 fs-2 text-center panier">
+        Votre panier
+      </div>
+      <a class="col-12 text-center text-light" routerLink="/main/list-boxes">
+        Continuer les achats
+      </a>
+    </div>
+  
+    <div class="row mt-5">
+      <div class="col-6">PRODUIT</div>
+      <div class="col-3">Quantité</div>
+      <div class="col-3">TOTAL</div>
+    </div>
+  
+    <hr />
+    @for (item of panier; track $index ; let i = $index ;) {
+        <div class="row mt-5">
+            <div class="col-6">
+              <div class="d-flex">
+                @if (item.box.boxImage) {
+                  <img class="rounded-1 w-25 h-25" [src]="getImagePath(item.box.boxImage)" alt=""> 
+              }@else{
+                <img
+                class="rounded-1 w-25 h-25"
+                src="https://poke-collect.com/cdn/shop/files/PCMysteryBoxSubscription.png?v=1723058879"
+                alt=""
+              />              }
+
+               
+                <div class="d-flex flex-column">
+                  <span class="mx-4 fs-6">{{ item.box.name }}</span>
+                  <span class="mx-4 fs-6">ProductLimit: {{ item.box.productLimit }}</span>
+                </div>
+              </div>
+            </div>
+      
+            <div class="col-3 d-flex align-items-center align-items-md-start flex-column flex-md-row">
+              <input
+                type="number"
+                min="1"
+                max="99"
+                [(ngModel)]="item.quantity"
+                (change)="updateTotal(i, item.quantity)"
+                class="number rounded-1 text-center mx-3 mb-3 mb-md-0 border-1"
+              />
+              <a (click)="removeFromPanier(i)">
+                <i class="bi bi-trash3 text-danger pointer mt-0 mt-lg-1 fs-3"></i>
+              </a>
+            </div>
+      
+            <div class="col-3">
+              {{ item.box.price * item.quantity | number: '1.2-2' }}
+            </div>
+          </div>
+    }@empty {
+        <div class="col-12 d-flex align-items-center justify-content-center minH">Votre panier est vide</div>
+    }
+    
+    <hr />
+    <div class="row d-flex justify-content-end">
+      <div class="col-3">
+        @if (panier) {
+            <button class="btn-acheter" (click)="purchaseAll()">Acheter</button>
+        }
+      </div>
+      <div class="col-3">
+        {{ totalPanier() | number: '1.2-2' }}
+      </div>
+    </div>
+  </div>
+  

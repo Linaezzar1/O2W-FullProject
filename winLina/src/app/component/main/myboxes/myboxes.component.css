@@ -1,0 +1,102 @@
+.minH{
+    min-height: 50vh;
+}
+
+.container {
+    background-color: #1b1e23;
+    width: 85%;
+    border-radius: 8px;
+    padding: 20px;
+    color: #fff;
+    margin-top: 70px;
+    margin-bottom: 70px;
+}
+
+.card{
+    background-color: #414648a2;
+    color: white;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.goback-button {
+
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    color: #f46949;
+    margin-right: 5px;
+}
+
+.content {
+    background-color: #1f2229;
+    border-radius: 8px;
+    color: #888;
+    padding: 10px;
+    font-size: 18px;
+    min-height: 50vh;
+    
+}
+.btn{
+    background-color: #e95533f3;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin: 20px;
+    
+}
+.close-button{
+    background-color: rgb(205, 16, 16);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 90vw;
+    margin-top: 20px;
+    
+}
+.close-button:hover {
+    background-color: darkred;
+}
+
+@media (max-width: 768px) {
+    .content {
+        font-size: 16px;
+        height: auto;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    .goback-button {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    .content {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .header {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+
+  

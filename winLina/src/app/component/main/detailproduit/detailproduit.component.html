@@ -1,0 +1,72 @@
+<div class="container">
+    @if (!isLoading && box){
+    <div class="card">
+        <div class="top-bar">
+            <button routerLink="/main/list-boxes" class="goback-button">
+                <i class="fa-sharp fa-solid fa-arrow-left" style="margin-right: 5px; color: #ff8c00;"></i> GO BACK
+            </button>
+
+        </div>
+        <div class="title-container">
+            <h2>{{box.name}} </h2>
+            <p> Price: <i class="fa-brands fa-ethereum"></i> {{box.price}} </p>
+        </div>
+
+        <div class="img-container">
+            @if (box.boxImage){
+            <img [src]="getImagePath(box.boxImage)" width="200px" height="200px" alt="">
+            }
+        </div>
+        <div>
+            <button class="btnadd" (click)="addBoxToCart(box)">Add Box</button>
+            <div class="rarities">
+                    @for(rarity of box.rarityProbabilities.reverse() ; track $index ){
+                       <span [ngClass]="{
+                        'common-text': rarity.rarity.name  === 'Common',
+                        'uncommon-text':rarity.rarity.name  === 'Uncommon',
+                        'rare-text':rarity.rarity.name === 'Rare',
+                        'epic-text':rarity.rarity.name  === 'Epic',
+                        'legendary-text': rarity.rarity.name  === 'Legendary'
+                      }">{{ rarity.rarity.name }} 
+                        - {{ rarity.probability }}% /  
+                    </span>
+                       
+                    }
+                
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <h2>Related Products</h2>
+        @if (products && products.length) {
+        <div class="row">
+            @for(p of products ; track $index){
+                <div class="col-2">
+                    <div class="product-card" [ngClass]="{
+                        'common': p.rarity.name === 'Common',
+                        'uncommon': p.rarity.name === 'Uncommon',
+                        'rare': p.rarity.name === 'Rare',
+                        'epic': p.rarity.name === 'Epic',
+                        'legendary': p.rarity.name === 'Legendary'
+                      }">
+                      <div class="" [ngClass]="{'text-success': p.stock > 0, 'text-danger': p.stock === 0}">
+                        {{p.stock | enStock}}
+                      </div>
+                        @if (p.productImage){
+                        <img [src]="getImagePath(p.productImage)" style="width: 100px;height: 84px;" />
+                        }
+                        <div class="fs-6 fw-bold" style="height: 80px; ">{{ p.name }}</div>
+                        <p>Price: {{ p.price }}</p>
+                    </div>
+                </div>
+            }
+        </div>
+        <app-comment-list [comments]="comments" [boxId]="boxId" (commentAdded)="onCommentAdded()"  ></app-comment-list>
+        } @else {
+        <p>No related products available.</p>
+        }
+    </div>
+    }@else {
+    <app-loader></app-loader>
+    }
+</div>

@@ -1,0 +1,105 @@
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { CategoryService } from '../../../services/category.service';
+import { ModalComponent } from '../../modal/modal.component';
+import { NgClass } from '@angular/common';
+
+@Component({
+  selector: 'app-add-category',
+  standalone: true,
+  imports: [ReactiveFormsModule, ModalComponent, NgClass ],
+  templateUrl: './add-category.component.html',
+  styleUrls: ['./add-category.component.css']
+})
+export class AddCategoryComponent {
+
+  private readonly categorieService: CategoryService = inject(CategoryService);
+  private readonly fb: FormBuilder = inject(FormBuilder);
+  private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+
+  categoryForm!: FormGroup;
+  categoryId!: string;
+  selectedImage: File | null = null;
+  action: string = "ADD";
+  showModal: boolean = false;
+  modalTitle: string = '';
+  modalMessage: string = '';
+
+  ngOnInit(): void {
+    this.categoryId = this.activatedRoute.snapshot.params['id'];
+
+    this.categoryForm = this.fb.group({
+      name: ['', [Validators.required, Validators.pattern('^[A-Z][A-Za-z 0-9]+'), Validators.maxLength(20)]],
+      description: ['', Validators.maxLength(500)],
+    });
+
+    if (this.categoryId) {
+      this.categorieService.getCategoryById(this.categoryId).subscribe(
+        (category) => {
+          console.log(category);
+          this.action = "UPDATE";
+          this.categoryForm.patchValue({
+            name: category.name,
+            description: category.description,
+          });
+        }
+      );
+    }
+  }
+
+  onFileChange(event: any): void {
+    const file = event.target.files[0];
+    this.selectedImage = file ? file : null;
+  }
+
+  onSubmit(): void {
+    if (this.categoryForm.valid) {
+      const categoryData = new FormData();  
+  
+     
+      categoryData.append('name', this.categoryForm.value.name);
+      categoryData.append('description', this.categoryForm.value.description);
+  
+      
+      if (this.selectedImage) {
+        categoryData.append('file', this.selectedImage, this.selectedImage.name);
+      }
+  
+     
+      if (this.categoryId) {
+        
+        this.categorieService.updateCategory(this.categoryId, categoryData).subscribe(
+          () => {
+            console.log('Category updated successfully');
+            this.modalTitle = 'Category Updated';
+            this.modalMessage = 'The category was updated successfully.';
+            this.showModal = true;
+          },
+          (error) => {
+            console.error('Error updating category:', error);
+          }
+        );
+      } else {
+    
+        this.categorieService.addCategory(categoryData).subscribe(
+          () => {
+            console.log('Category added successfully');
+            this.modalTitle = 'Category Added';
+          this.modalMessage = 'The category was added successfully.';
+          this.showModal = true;
+          },
+          (error) => {
+            console.error('Error adding category:', error);
+          }
+        );
+      }
+    } else {
+      console.error('Form is invalid');
+    }
+  }
+  closeModal(): void {
+    this.showModal = false;
+  }
+  
+}

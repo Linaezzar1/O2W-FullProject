@@ -1,0 +1,255 @@
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormArray, AbstractControl, ValidationErrors } from '@angular/forms';
+import { BoxesService } from '../../../services/boxes.service';
+import { CategoryService } from '../../../services/category.service';
+import { Category } from '../../../models/category';
+import { rarityProbabilities } from '../../../models/rarity-probability';
+import { RarityService } from '../../../services/rarity.service';
+import { Rarity } from '../../../models/rarity';
+import { ActivatedRoute } from '@angular/router';
+import { NgClass } from '@angular/common';
+import { LoaderComponent } from "../../loader/loader.component";
+import { of } from 'rxjs';
+import { Box } from '../../../models/box';
+import { ModalComponent } from '../../modal/modal.component';
+
+@Component({
+  selector: 'app-add-box',
+  standalone: true,
+  imports: [ReactiveFormsModule, NgClass, LoaderComponent, ModalComponent],
+  templateUrl: './add-box.component.html',
+  styleUrls: ['./add-box.component.css']
+})
+export class AddBoxComponent implements OnInit {
+  private readonly boxService: BoxesService = inject(BoxesService);
+  private readonly categoryService: CategoryService = inject(CategoryService);
+  private readonly rarityService: RarityService = inject(RarityService);
+  private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute); 
+  private readonly fb: FormBuilder = inject(FormBuilder);
+  
+  
+  
+  boxForm!: FormGroup;
+  boxId!: string;
+  boxByIdRarityProbabilities!: rarityProbabilities[];
+  categories: Category[] = [];
+  rarities: Rarity[] = [];
+  selectedImage: File | null = null;
+  loading: boolean = true;
+  loadingCategories: boolean = true;
+  boxCategories:Category[]=[]
+  restCategories!:Category[];
+  action:string = 'ADD';
+  showModal: boolean = false;
+  modalTitle: string = '';
+  modalMessage: string = '';
+  
+
+
+
+  ngOnInit(): void {
+    this.boxId = this.activatedRoute.snapshot.params['id'];
+
+
+    this.boxForm = this.fb.group({
+      name: ['', [Validators.required, Validators.pattern('[A-Z][A-Za-z ]+'), Validators.maxLength(25)]],
+      price: ['', [Validators.required, Validators.min(1)]],
+      productLimit: [1, Validators.required],
+      rarityProbabilities: this.fb.array([], { validators: this.probabilitySumValidator }),
+      category: this.fb.array([])
+    });
+    this.loading = true;
+    if (this.boxId) {
+      this.boxService.getBoxById(this.boxId).subscribe( 
+        (box) => {
+          console.log(box);
+          this.boxCategories = box.categories;
+          
+          
+          this.boxByIdRarityProbabilities = box.rarityProbabilities;
+          console.log(this.boxByIdRarityProbabilities);
+          
+          this.boxForm.patchValue(box);
+          this.selectedImage = null;  
+          this.loading = false;  
+          this.action = 'UPDATE'
+          this.getAllCategories();
+          this.getAllRarity();
+
+        },
+        (error) => {
+          console.error('Error retrieving box', error)
+          this.loading = false;
+        }
+      );
+    }else{
+      this.loading = false; 
+      this.getAllCategories();
+      this.getAllRarity();
+    }
+
+    this.initializeRarity();
+    
+
+  }
+
+  getAllCategories(): void {
+    this.categoryService.getCategorys().subscribe(
+      (categories) => {
+        this.categories = categories;
+        console.log(categories);
+        if (this.boxId) {
+          this.restCategories = this.categories.filter(c =>!this.boxCategories.some(bc => bc._id === c._id));
+          console.log(this.restCategories);
+        }else{
+          this.restCategories = this.categories;
+        }
+
+        this.loadingCategories = false;
+
+      },
+      (error) => {
+        console.error('Error retrieving categories', error) 
+        this.loadingCategories = false;
+
+      }
+    );
+  }
+ 
+addCategoryToBox(category: Category): void {
+  this.boxCategories.push(category);
+
+  this.restCategories = this.restCategories.filter(cat => cat._id !== category._id);
+}
+
+
+removeCategoryFromBox(category: Category): void {
+  this.restCategories.push(category);
+
+  this.boxCategories = this.boxCategories.filter(cat => cat._id !== category._id);
+}
+
+
+  getAllRarity(): void {
+    this.rarityService.getRarities().subscribe(
+      (rarities) => {
+        this.rarities = rarities;
+        this.initializeRarity();  
+      },
+      (error) => console.error('Error retrieving rarity probabilities', error)
+    );
+  }
+
+
+  
+  private initializeRarity(): void {
+    of(this.rarities).subscribe((rarities) => {
+      rarities.forEach((rarity, index) => {
+        this.rarityProbabilities.push(
+          this.fb.group({
+            rarity: rarity,
+            probability: [
+              this.boxByIdRarityProbabilities
+                ? this.boxByIdRarityProbabilities[index].probability
+                : 100 / this.rarities.length,
+              Validators.required,
+            ],
+          })
+        );
+      });
+    });
+  }
+  probabilitySumValidator(control: AbstractControl): ValidationErrors | null {
+    const formArray = control as FormArray;
+    const totalProbability = formArray.controls.reduce((sum, group) => {
+      const probability = group.get('probability')?.value;
+      return sum + (probability || 0);
+    }, 0);
+
+    return totalProbability === 100 ? null : { probabilitySum: true };
+  }
+
+
+  get rarityProbabilities(): FormArray {
+    return this.boxForm.get('rarityProbabilities') as FormArray;
+  }
+  
+  get category(): FormArray {
+    return this.boxForm.get('category') as FormArray;
+  }
+
+
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files?.[0];
+    this.selectedImage = file || null;
+    }
+
+
+  onSubmit(): void {
+    this.loading = true;
+  
+
+    const selectedCategories: string[] = this.boxCategories.map(cat => cat._id);
+    if (selectedCategories.length < 1 ) {
+      this.loading = false;
+      alert('Veuillez sélectionner au moins une catégorie');
+      return;
+    }
+  
+
+    const rarityData = this.rarityProbabilities.controls.map(control => ({
+      rarity: control.value.rarity._id,
+      probability: control.value.probability
+    }));
+  
+ 
+    const formData = new FormData();
+    formData.append('name', this.boxForm.value.name);
+    formData.append('price', this.boxForm.value.price);
+    formData.append('productLimit', this.boxForm.value.productLimit);
+    formData.append('rarityProbabilities', JSON.stringify(rarityData));
+    formData.append('categories', JSON.stringify(selectedCategories));
+  
+
+    if (this.selectedImage) {
+      formData.append('file', this.selectedImage, this.selectedImage.name);
+    }
+  
+ 
+    if (this.boxId) {
+      this.boxService.updateBox(this.boxId, formData).subscribe(
+        (response) => {
+          console.log('Box updated successfully', response);
+          this.loading = false;
+          this.modalTitle = 'Box Updated';
+          this.modalMessage = 'The box was updated successfully.';
+          this.showModal = true;
+        },
+        (error) => {
+          console.error('Error updating box', error);
+          this.loading = false;
+        }
+      );
+    } else {
+      this.boxService.addBox(formData).subscribe(
+        (response) => {
+          console.log('Box added successfully', response);
+          this.loading = false;
+          this.modalTitle = 'Box Added';
+          this.modalMessage = 'The Box was added successfully.';
+          this.showModal = true;
+        },
+        (error) => {
+          console.error('Error adding box', error);
+          this.loading = false;
+        }
+      );
+    }
+  }
+  closeModal(): void {
+    this.showModal = false;
+  }
+  
+  
+}

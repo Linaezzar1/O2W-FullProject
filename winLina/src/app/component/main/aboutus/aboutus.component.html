@@ -1,0 +1,96 @@
+@if(!isLoading){
+<div class="container">
+    <div class="parallax-header">
+        <h1>
+            About Us
+        </h1>
+    </div>
+
+    <div class="progress-bar"></div>
+
+    <div class="content">
+        <div class="about-container">
+            <p class="contentP">At Open2Win, we believe in the thrill of surprises and the joy of discovery. Our
+                mission
+                is to
+                offer a unique shopping experience where customers can purchase mystery boxes filled with
+                exciting surprises. Each box is carefully curated to bring you a sense of anticipation and
+                delight as you uncover its contents. Join our community and experience the excitement of
+                unboxing something new and special with Open2Win!</p>
+
+            <button type="button" routerLink="/main/list-boxes" class="check-button">Check our products</button>
+        </div>
+        <div class="who-we-are-section">
+            <div class="section-container">
+                <h2 class="section-title">WHO ARE WE?</h2>
+                <p class="section-description">
+                    We are an online platform dedicated to bringing excitement and joy through surprise boxes. At
+                    Open2Win,
+                    we believe in the thrill of discovering something new and unique with every purchase. Our team
+                    is
+                    passionate about curating mystery boxes filled with carefully selected surprises, designed to
+                    bring
+                    delight and anticipation. We are committed to providing an exceptional shopping experience,
+                    where
+                    every
+                    box is an opportunity to uncover something special. Join our community and experience the joy of
+                    unboxing with Open2Win where every surprise brings a little victory!
+                </p>
+            </div>
+            <img src="images/card-removebg-preview.png" alt="Open2Win Logo" class="section-image">
+        </div>
+
+        <h2 class="section-title">MEET THE TEAM</h2>
+
+        <div class="card-container">
+            <div class="card">
+                <div class="card-overlay"></div>
+                <div class="card-inner">
+                    <img src="images/youssef.jpg" alt="Youssef Laribi">
+                    <p class="heading">Youssef Laribi</p>
+                    <p>Student at IsetCharguia</p>
+                    <p>2024/2025</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-overlay"></div>
+                <div class="card-inner">
+                    <img src="images/lina.jpg" alt="Lina Ezzar">
+                    <p class="heading">Lina Ezzar</p>
+                    <p>Student at IsetCharguia</p>
+                    <p>2024/2025</p>
+                </div>
+            </div>
+        </div>
+        <div class="plans-container">
+            <h2 class="section-title">What we offer?</h2>
+            <div class="carte-container">
+                <div class="carte">
+                    <h2>Surprise Boxes</h2>
+                    <p>We offer a wide range of mystery boxes filled with exciting surprises. Each box is carefully
+                        curated to bring joy and excitement.</p>
+                    <img src="images/gift-dynamic-color.png" alt="">
+                </div>
+                <div class="carte">
+                    <h2>Exclusive Offers</h2>
+                    <p>Our team provides exclusive deals and offers to make your unboxing experience even more
+                        exciting and special.</p>
+                    <img src="images/trophy-dynamic-color.png" alt="">
+                </div>
+                <div class="carte">
+                    <h2>Community Engagement</h2>
+                    <p>Join our online community to share your experiences, connect with other surprise box
+                        enthusiasts, and be the first to know about new releases.</p>
+                    <img src="images/chat-bubble-dynamic-color.png" alt="">
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+}@else {
+    <div class="d-flex justify-content-center align-items-center " style="min-height: 40vw;">
+        <app-loader></app-loader>
+    </div>
+}

@@ -1,0 +1,48 @@
+<div class="container">
+  
+    <section class="profile-info">
+        <div class="profile-details">
+            <img src="images/boy-dynamic-color.png" alt="Profile" class="profile-pic">
+            <div>
+                <h2>Username</h2>
+            </div>
+        </div>
+
+        <div class="stats">
+            <h3>{{nbOpenedBox()}}</h3>
+            <p>Unboxed Boxes</p>
+        </div>
+
+        
+        <div>
+            <button class="change-button" routerLink="/main/changepassword">Change password</button>
+        </div>
+
+
+        
+    </section>
+
+
+    <section class="shipping-address">
+        <h2>Shipping Address</h2>
+        <div class="shipping-container">
+            @if(currentUser){
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" [value]="currentUser.name  | titlecase">
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" [value]="currentUser.lastname | titlecase">
+                        </div>
+                    </div>
+                    
+                       
+                   
+                </form>
+            }
+        </div>
+    </section>
+</div>

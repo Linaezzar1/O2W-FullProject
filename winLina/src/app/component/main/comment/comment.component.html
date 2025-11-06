@@ -1,0 +1,24 @@
+<div class="d-flex justify-content-between align-items-center ">
+    <div class="user d-flex flex-row align-items-center ">
+      <span>
+        <small class=" text-dark fs-6" style="font-weight: bold;">
+            {{comment.user.name | titlecase}} {{comment.user.lastname | titlecase}}
+      </small> 
+      <small
+          class="font-weight-bold">{{comment.content}}
+        </small>
+    </span>
+    </div>
+    <small>{{comment.createdAt | daysAgo  }}</small>
+  </div>
+  
+  <div class="action d-flex justify-content-between mt-2 align-items-center">
+    @if (comment.user._id == user?._id || user?.role == 'admin') {
+      <div class="reply">
+        <small (click)="onRemove()">Remove</small>
+      </div>
+  
+    }
+
+  
+  </div>

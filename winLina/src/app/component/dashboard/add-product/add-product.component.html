@@ -1,0 +1,175 @@
+<div class="container">
+    <div class="row d-flex justify-content-center p-3">
+        <div class="col-12 col-lg-6">
+            <div class="row justify-content-xl-center">
+                <div class="col-12 col-xl-11">
+                    <div class="bg-gradient border rounded shadow-sm overflow-hidden">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="fs-3 text-center pt-4 fw-bold">ADD PRODUCT</div>
+                            </div>
+                        </div>
+                        <form [formGroup]="productForm" (submit)="onSubmit()">
+                            <div class="row gy-4 gy-xl-3 p-4 p-xl-5">
+                                <div class="col-12">
+                                    <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="name" name="name" formControlName="name"
+                                        [ngClass]="{
+                                        'is-invalid': productForm.get('name')?.touched && productForm.get('name')?.invalid, 
+                                        'is-valid':productForm.get('name')?.touched && productForm.get('name')?.valid
+                                      }" required>
+                                    <div class="invalid-feedback">
+                                        @if (productForm.get('name')?.touched && productForm.get('name')?.invalid) {
+                                        @if(productForm.get('name')?.hasError('required')){
+                                        <span>Name is required.</span>
+                                        }
+                                        @if (productForm.get('name')?.hasError('pattern')) {
+                                        <span>Name should start with a capital letter.</span>
+                                        }
+                                        @if (productForm.get('name')?.hasError('maxlength')){
+                                        <span>
+                                            Name cannot exceed 25 characters.
+                                        </span>
+                                        }
+                                        }
+                                    </div>
+                                </div>
+
+                               
+                                <div class="col-12">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea class="form-control" id="description" formControlName="description"
+                                        name="description"></textarea>
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <label for="price" class="form-label">Price <span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <img src="images/eth-dynamic-color.png" width="25" height="25" alt="">
+                                        </span>
+                                        <input type="number" class="form-control" id="price" formControlName="price"
+                                            name="price" [ngClass]="{
+                                                'is-invalid': productForm.get('price')?.touched && productForm.get('price')?.invalid
+                                              }" required>
+                                        <div class="invalid-feedback">
+                                            @if (productForm.get('price')?.touched && productForm.get('price')?.invalid)
+                                            {
+                                            @if(productForm.get('price')?.hasError('required')){
+                                            <span>Price is required.</span>
+                                            }
+                                            @if (productForm.get('price')?.hasError('min')) {
+                                            <span>Price must be greater than 0.</span>
+                                            }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <label for="stock" class="form-label">Stock <span
+                                            class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="stock" formControlName="stock"
+                                        name="stock" [ngClass]="{
+                                            'is-invalid': productForm.get('stock')?.touched && productForm.get('stock')?.invalid
+                                          }" required>
+                                    <div class="invalid-feedback">
+                                        @if (productForm.get('stock')?.touched && productForm.get('stock')?.invalid)
+                                        {
+                                        @if(productForm.get('stock')?.hasError('required')){
+                                        <span>stock is required.</span>
+                                        }
+                                        @if (productForm.get('stock')?.hasError('min')) {
+                                        <span>stock must be greater than 0.</span>
+                                        }
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="categories" class="form-label">Categories</label>
+                                    <div>
+                                        <div formArrayName="category" [ngClass]="{
+                                            'is-invalid': productForm.get('category')?.touched && productForm.get('category')?.invalid
+                                        }">
+                                            @if (categoriesLoaded) {
+                                            <div class="row">
+                                                @for (cat of categories; track $index ; let i = $index ;) {
+                                                <div class="col-4 d-flex align-items-center">
+                                                    <input type="checkbox" [formControlName]="i">
+                                                    <label class="ms-2">{{cat.name}}</label>
+                                                </div>
+                                                }
+                                            </div>
+                                            }
+
+                                        </div>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        @if (productForm.get('category')?.touched &&
+                                        productForm.get('category')?.hasError('required')) {
+                                        <span>At least one category must be selected.</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="rarity" class="form-label">Rarity <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="rarity" formControlName="rarity" name="rarity"
+                                        [ngClass]="{
+                                        'is-invalid': productForm.get('rarity')?.touched && productForm.get('rarity')?.invalid
+                                    }" required>
+                                        @for (r of rarities; track $index) {
+                                        <option [value]="r._id">{{r.name}}</option>
+                                        }
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        @if (productForm.get('rarity')?.touched && productForm.get('rarity')?.hasError('required')) {
+                                        <span>Please select a rarity.</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="image">Upload Image</label>
+
+                                    <div class="input-group">
+                                        <input id="image" type="file" class="form-control"
+                                            (change)="onFileChange($event)" accept=".png, .jpg, .jpeg" />
+                                        <span class="input-group-text">
+                                            <img src="images/picture-dynamic-color.png" width="25" height="25" alt="">
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                         
+                                <div class="col-12 d-flex flex-column align-items-center">
+                                    @if (productForm.invalid) {
+                                    <small class="text-danger">Please fill out all required fields</small>
+                                    }
+                                    <div class="d-grid w-100">
+                                        <button class="btn-53" type="submit">
+                                            <div class="original">ADD</div>
+                                            <div class="letters">
+                                                <span>A</span>
+                                                <span>D</span>
+                                                <span>D</span>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if(showModal){
+<app-modal [title]="modalTitle" [message]="modalMessage" (closeModal)="closeModal()"></app-modal>
+}

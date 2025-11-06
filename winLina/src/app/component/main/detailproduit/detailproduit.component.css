@@ -1,0 +1,142 @@
+
+.container {
+    color: #f1f1f1;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    text-align: center;
+    line-height: 2;
+}
+
+.card {
+    background-color: #1d2326;
+    width: 80vw;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    color: #f1f1f1;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #2b3035;
+    border-radius: 8px;
+}
+
+.top-bar button {
+    color: #ffffff;
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.title-container p{
+    font-size: 25px;
+    color: rgb(236, 73, 28);
+    
+}
+h2{
+    margin-right: 40px;
+    font-size: 35px;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+.img-container{
+    margin-bottom: 20px;
+    background-image: url("../../../../../public/images/design.png");
+    
+}
+.btnadd{
+    padding: 5px 20px;
+    font-size: 20px;
+    border-radius: 40px;
+    background: linear-gradient(45deg, #ff4b4b, #f68055);
+    border: none;
+    color: white;
+    
+}
+.btnadd:hover{
+    background: linear-gradient(45deg, #f82424, #f16938);
+}
+.container-fluid{
+    background-color: transparent;
+    margin-top: 60px;
+}
+.container-fluid h2{
+    margin-bottom: 40px;
+    font-family: mv boli;
+    
+}
+
+.product-card{
+    background-color: #1f2426ad;
+    margin: 20px;
+}
+
+
+.common {
+   border-bottom: 3px solid rgb(111, 111, 111);
+   border-radius: 10px;
+  }
+
+  .uncommon{
+    border-bottom: 3px solid rgb(100, 225, 194);
+    border-radius: 10px;
+  }
+  
+  .rare {
+    border-bottom: 3px solid rgb(33, 47, 104);
+    border-radius: 10px;
+  }
+  
+  .epic {
+    border-bottom: 3px solid #9932cc;
+    border-radius: 10px;
+  }
+  
+  .legendary {
+    border-bottom: 3px solid #eeb114;
+    border-radius: 10px;
+  }
+  
+  .rarities{
+    font-size: 15px;
+    margin: 20px;
+    color: rgb(107, 103, 103);
+  }
+
+
+
+  
+ 
+  .common-text {
+    color:  rgb(111, 111, 111);
+   }
+ 
+   .uncommon-text{
+     color:  rgb(100, 225, 194);
+   }
+   
+   .rare-text {
+     color:  rgb(33, 47, 104);
+   }
+   
+   .epic-text {
+     color:  #9932cc;
+   }
+   
+   .legendary-text {
+     color:  #eeb114;
+   } 
+  
+  

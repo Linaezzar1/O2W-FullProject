@@ -1,0 +1,12 @@
+<div class="card my-1 w-100 " >
+    <div class="card-body d-flex flex-column align-items-center position-relative">  
+        @if(box.boxImage){
+            <img [src]="getImagePath(box.boxImage)" class="box-image cursor-pointer" width="150" height="150" alt="" [routerLink]="['/main/detailbox', box._id]">
+        }
+        <div class="fs-5" style="font-family: mv boli;">{{box.name}} </div>
+        <a class="btn  w-80 m-1 " (click)="addBoxToCart(box)">
+            Buy Now <span class="badge ">{{box.price}} <i class="fa-brands fa-ethereum"></i></span>
+        </a>
+    </div>
+</div>
+
